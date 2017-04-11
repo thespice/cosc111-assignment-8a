@@ -15,8 +15,7 @@ public class CarLoanData {
     int carprice;
     int loanlen;
     double expreturn;
-    
-
+    double payment;
     public int getCarprice() {
         return carprice;
     }
@@ -43,30 +42,30 @@ public class CarLoanData {
 
     public double getMonthlyPayment()
     {
-         return  (double)carprice / (double)loanlen;
-         
+        payment = (double)carprice / (double)loanlen;        
+        return payment;
     }
     
-    public String print()
-    { double [] balance = new double[loanlen];
+    public double getInterest()
+    {
+         return (double)carprice * Math.pow((1 + (double)expreturn/12),(double)loanlen);
+    }
     
-    
-    String s = "";
-    balance[0] = carprice;
-    for (int i=1; i<loanlen; i++)
-    { 
-        
-        
-        balance[i] = balance[i-1] - getMonthlyPayment();
-        balance[i] += ( 1 * expreturn/12.0 *0.01);
-                if (i%12 == 0)
-                {
-                    s += "Month " + i + ": $" + String.format("%.2f ", balance[i]) + "\n<br>";
-                }
-     }
-    s += "Final Balance: $" + String.format("%.2f ", balance[loanlen - 1]);
-    return s; 
-}
-
-
+    public String balance()
+    {
+        double[] bal = new double[loanlen];
+        String s = " ";
+        bal[0] = carprice;
+        for(int i=1; i<loanlen; i++)
+        {
+            bal[i] = bal[i-1] - payment;
+            bal[i] *= (1+ expreturn/12.0*0.01);
+            if (i%12 ==0)
+            {
+            s +="Month " + i +": " + bal[i] + "\n<br>";
+            }
+        }
+        s += "Final Balance: $" + String.format("%.2f", bal[loanlen - 1]);
+        return s;
+    }
 }
